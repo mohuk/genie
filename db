@@ -1,0 +1,31 @@
+#!/bin/sh
+
+NAME=mssql
+SA_PASSWORD=10Pearls!
+IMAGE_NAME=mohuk/sql-server-wwi
+
+docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD='$SA_PASSWORD \
+    --name $NAME -p 1401:1433 \
+    -d mcr.microsoft.com/mssql/server:2017-latest
+
+docker exec -it $NAME mkdir /var/opt/mssql/backup
+
+docker cp ./data/wwi.bak $NAME:/var/opt/mssql/backup
+
+docker exec -it $NAME /opt/mssql-tools/bin/sqlcmd -S localhost \
+    -U SA -P $SA_PASSWORD \
+    -Q 'RESTORE FILELISTONLY FROM DISK = "/var/opt/mssql/backup/wwi.bak"' \
+    | tr -s ' ' | cut -d ' ' -f 1-2
+
+docker exec -it $NAME /opt/mssql-tools/bin/sqlcmd \
+    -S localhost -U SA -P $SA_PASSWORD \
+    -Q 'RESTORE DATABASE WideWorldImporters FROM DISK = "/var/opt/mssql/backup/wwi.bak" WITH MOVE "WWI_Primary" TO "/var/opt/mssql/data/WideWorldImporters.mdf", MOVE "WWI_UserData" TO "/var/opt/mssql/data/WideWorldImporters_userdata.ndf", MOVE "WWI_Log" TO "/var/opt/mssql/data/WideWorldImporters.ldf", MOVE "WWI_InMemory_Data_1" TO "/var/opt/mssql/data/WideWorldImporters_InMemory_Data_1"'
+
+
+docker exec -it $NAME /opt/mssql-tools/bin/sqlcmd \
+   -S localhost -U SA -P $SA_PASSWORD \
+   -Q 'SELECT Name FROM sys.Databases'
+
+CONTAINER_ID=$(docker ps -qf name=$NAME) 
+
+docker commit $CONTAINER_ID $IMAGE_NAME
