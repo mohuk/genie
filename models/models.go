@@ -1,15 +1,17 @@
-package main
+package models
 
-type tableForm struct {
+import "database/sql"
+
+type TableForm struct {
 	TableName string     `json:"tableName,omitempty"`
-	Template  []template `json:"formlyTemplate,omitempty"`
+	Template  []Template `json:"formlyTemplate,omitempty"`
 }
-type template struct {
+type Template struct {
 	Key         string       `json:"key,omitempty"`
 	Type        string       `json:"type,omitempty"`
-	TemplateOps templateOpts `json:"templateOptions,omitempty"`
+	TemplateOps TemplateOpts `json:"templateOptions,omitempty"`
 }
-type templateOpts struct {
+type TemplateOpts struct {
 	Type        string `json:"type,omitempty"`
 	Label       string `json:"label,omitempty"`
 	PlaceHolder string `json:"placeholder,omitempty"`
@@ -34,4 +36,25 @@ func Type(s string) string {
 		return v
 	}
 	return "text"
+}
+
+// Column is a column
+type Column struct {
+	Name     sql.NullString
+	Type     sql.NullString
+	Nullable sql.NullString
+	Default  sql.NullString
+	Length   sql.NullString
+}
+
+// Table is a table
+type Table struct {
+	Catalog sql.NullString
+	Schema  sql.NullString
+	Name    sql.NullString
+	Type    sql.NullString
+}
+
+type Database struct {
+	DBName sql.NullString `json:"dbName,omitempty"`
 }
