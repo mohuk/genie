@@ -1,0 +1,46 @@
+<div class="wrapper">
+  <div class="col">
+    <mat-list>
+      <h3>Databases</h3>
+
+      <mat-radio-group>
+        <mat-list-item *ngFor="let db of databases">
+          <mat-radio-button value="{{db.name}}" (change)="onDatabaseChange($event)">{{db.name}}</mat-radio-button>
+        </mat-list-item>
+      </mat-radio-group>
+    </mat-list>
+  </div>
+  <div class="col">
+    <mat-list>
+      <h3>Tables</h3>
+
+      <mat-radio-group>
+        <mat-list-item *ngFor="let table of tables">
+          <mat-radio-button value="{{table.Name}}" (change)="onTableChange($event)">{{table.Name}}</mat-radio-button>
+        </mat-list-item>
+      </mat-radio-group>
+    </mat-list>
+  </div>
+  <div class="col">
+    <mat-selection-list #selectedColumns (selectionChange)="onSelectColumns(selectedColumns)">
+      <h3>Column Forms</h3>
+
+      <mat-list-option *ngFor="let cf of columnForms.formlyTemplate" [value]="cf">
+        {{cf.key}}
+      </mat-list-option>
+    </mat-selection-list>
+  </div>
+</div>
+
+
+<div *ngIf="jsonObj">
+  <h3>Formly JSON Preview</h3>
+  <code>
+    <!-- <ul>
+      <li *ngFor="let sc of selectedColumns">{{sc}}</li>
+    </ul> -->
+    <pre>{{ jsonObj | json }}</pre>
+  </code>
+</div>
+
+<router-outlet></router-outlet>

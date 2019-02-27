@@ -1,0 +1,9 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+.wrapper .col {
+  flex: 1 0 33.33%;
+  max-height: 60vh;
+  overflow: auto;
+}
