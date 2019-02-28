@@ -30,11 +30,12 @@ const (
 func main() {
 	store := dbase.NewStore(*host, *port, *user, *password)
 	gm := manager.NewGenieManager(store)
-	r := mux.NewRouter()
 
-	r.HandleFunc("/db", handlers.GetDatabases(gm)).Methods("GET")
-	r.HandleFunc("/db/{dbname}/tables", handlers.GetTables(gm)).Methods("GET")
-	r.HandleFunc("/db/{dbname}/tables/{tableId}", handlers.GetColumns(gm)).Methods("GET")
+	APIRouter := mux.NewRouter().PathPrefix("/api").Subrouter()
 
-	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", httpPort), r))
+	APIRouter.HandleFunc("/db", handlers.WithLogger(handlers.GetDatabases(gm))).Methods("GET")
+	APIRouter.HandleFunc("/db/{dbname}/tables", handlers.GetTables(gm)).Methods("GET")
+	APIRouter.HandleFunc("/db/{dbname}/tables/{tableId}", handlers.GetColumns(gm)).Methods("GET")
+
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", httpPort), APIRouter))
 }
