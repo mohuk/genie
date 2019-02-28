@@ -6,6 +6,8 @@ import (
 
 	"github.com/darahayes/go-boom"
 	"github.com/gorilla/mux"
+	"github.com/mohuk/genie/errors"
+	"github.com/mohuk/genie/httpio"
 	"github.com/mohuk/genie/manager"
 )
 
@@ -16,12 +18,19 @@ func GetTables(manager manager.GenieManager) http.HandlerFunc {
 		dbname := mux.Vars(r)["dbname"]
 		tables, err := manager.GetTables(dbname)
 		if err != nil {
-			boom.Internal(w, err)
-			return
+			switch err.(type) {
+			case *errors.ErrDbConn:
+				boom.ExpectationFailed(w, err.Error())
+				return
+			default:
+				boom.BadData(w, err.Error())
+				return
+			}
 		}
+		err = httpio.RespondJSON(w, tables)
 		err = json.NewEncoder(w).Encode(tables)
 		if err != nil {
-			boom.Internal(w, err)
+			boom.ExpectationFailed(w, err.Error())
 			return
 		}
 	}
