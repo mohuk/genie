@@ -5,7 +5,7 @@ SA_PASSWORD=10Pearls!
 IMAGE_NAME=mohuk/sql-server-wwi
 
 docker run -e 'ACCEPT_EULA=Y' -e 'MSSQL_SA_PASSWORD='$SA_PASSWORD \
-    --name $NAME -p 1401:1433 \
+    --name $NAME -p 1433:1433 \
     -d mcr.microsoft.com/mssql/server:2017-latest
 
 docker exec -it $NAME mkdir /var/opt/mssql/backup

@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  api:
+    container_name: genie-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+  db:
+    container_name: genie-db
+    image: mohuk/sql-server-wwi:2017-latest
+
+  frontend:
+    container_name: genie-fe
+    build:
+      context: ./fe
+    ports:
+      - 4002:80
