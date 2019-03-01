@@ -1,11 +1,11 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/gorilla/mux"
 	"github.com/mohuk/genie/dbase"
@@ -17,26 +17,17 @@ import (
 var (
 	password = os.Getenv("DB_PWD")
 	user     = os.Getenv("DB_USER")
-	debug    = flag.Bool("debug", false, "enable debugging")
-	port     = flag.Int("port", 1401, "the database port")
-	host     = flag.String("host", "localhost", "the database host")
-	database = flag.String("database", "WideWorldImporters", "the database name")
-)
+	portEnv  = os.Getenv("DB_PORT")
+	host     = os.Getenv("DB_HOST")
+	database = os.Getenv("DB_NAME")
 
-const (
+	port     int
 	httpPort = 3000
 )
 
 func main() {
 
-	if password == "" {
-		password = "10Pearls!"
-	}
-	if user == "" {
-		user = "sa"
-	}
-
-	store := dbase.NewStore(*host, *port, user, password)
+	store := dbase.NewStore(host, port, user, password)
 	mapper := formly.NewFormlyMapper()
 	gm := manager.NewGenieManager(store, mapper)
 
@@ -47,4 +38,28 @@ func main() {
 	APIRouter.HandleFunc("/db/{dbname}/tables/{tableId}", handlers.GetColumns(gm)).Methods("GET")
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", httpPort), APIRouter))
+}
+
+func init() {
+	if password == "" {
+		password = "10Pearls!"
+	}
+	if user == "" {
+		user = "sa"
+	}
+	if database == "" {
+		database = "WideWorldImporters"
+	}
+	if host == "" {
+		host = "localhost"
+	}
+	if portEnv == "" {
+		port = 1401
+	} else {
+		intPort, err := strconv.Atoi(portEnv)
+		if err != nil {
+			log.Fatal("invalid port")
+		}
+		port = intPort
+	}
 }
