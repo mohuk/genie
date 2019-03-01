@@ -1,0 +1,5 @@
+DB_PWD=10Pearls!
+DB_USER=sa
+DB_PORT=1433
+DB_HOST=genie-db
+DB_NAME=WideWorldImporters

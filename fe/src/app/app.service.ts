@@ -11,14 +11,14 @@ export class AppService {
   constructor(private httpClient: HttpClient) { }
 
   getDatabases(): Observable<Database[]> {
-    return this.httpClient.get<Database[]>('http://localhost:3000/db');
+    return this.httpClient.get<Database[]>('/api/db');
   }
 
   getTables(name: string): Observable<Table[]> {
-    return this.httpClient.get<Table[]>(`http://localhost:3000/db/${name}/tables`);
+    return this.httpClient.get<Table[]>(`/api/db/${name}/tables`);
   }
 
   getTableForms(dbName, tableName: string): Observable<ColumnForm> {
-    return this.httpClient.get<ColumnForm>(`http://localhost:3000/db/${dbName}/tables/${tableName}`);
+    return this.httpClient.get<ColumnForm>(`/api/db/${dbName}/tables/${tableName}`);
   }
 }
