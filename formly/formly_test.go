@@ -27,8 +27,9 @@ func TestHasMaxLength(t *testing.T) {
 func TestMapColumn(t *testing.T) {
 	colName := "colName"
 	length := "15"
-	Nullable := "YES"
+	nullable := "YES"
 	someT := "text"
+	isDefault := "NULL"
 	c := models.Column{
 		Name: sql.NullString{
 			String: colName,
@@ -40,9 +41,11 @@ func TestMapColumn(t *testing.T) {
 			String: someT,
 		},
 		Nullable: sql.NullString{
-			String: Nullable,
+			String: nullable,
 		},
-		Default: sql.NullString{},
+		Default: sql.NullString{
+			String: isDefault,
+		},
 	}
 	m := NewFormlyMapper().MapColumn(c)
 	if m.TemplateOps.Type != someT {
@@ -53,7 +56,11 @@ func TestMapColumn(t *testing.T) {
 		t.Fail()
 		return
 	}
-	if m.TemplateOps.Required != true {
+	if !m.TemplateOps.Required {
+		t.Fail()
+		return
+	}
+	if m.Default {
 		t.Fail()
 		return
 	}

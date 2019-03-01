@@ -7,6 +7,7 @@ type TableForm struct {
 type Template struct {
 	Key         string       `json:"key,omitempty"`
 	Type        string       `json:"type,omitempty"`
+	Default     bool         `json:"default,omitempty"`
 	TemplateOps TemplateOpts `json:"templateOptions,omitempty"`
 }
 type TemplateOpts struct {
@@ -49,4 +50,9 @@ func Type(s string) string {
 		return v
 	}
 	return "text"
+}
+
+// Default ...
+func Default(s string) bool {
+	return !(s == "NULL")
 }

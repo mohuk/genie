@@ -5,5 +5,6 @@ require (
 	github.com/darahayes/go-boom v0.0.0-20180305153956-71186248f707
 	github.com/denisenkom/go-mssqldb v0.0.0-20190204142019-df6d76eb9289
 	github.com/gorilla/mux v1.7.0
+	github.com/urfave/cli v1.20.0 // indirect
 	golang.org/x/crypto v0.0.0-20190225124518-7f87c0fbb88b // indirect
 )

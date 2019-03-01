@@ -10,8 +10,9 @@ import (
 func (f *formly) MapColumn(col models.Column) Template {
 
 	t := Template{
-		Key:  col.Name.String,
-		Type: "input",
+		Key:     col.Name.String,
+		Type:    "input",
+		Default: Default(col.Default.String),
 		TemplateOps: TemplateOpts{
 			Type:        Type(col.Type.String),
 			PlaceHolder: fmt.Sprintf("Enter %s...", col.Name.String),

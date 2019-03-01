@@ -21,8 +21,8 @@ type Column struct {
 	Name     string
 	Type     string
 	Nullable string
-	Default  string
 	Length   string
+	Default  string
 }
 
 func UnmarshallDB(database models.Database) Database {
